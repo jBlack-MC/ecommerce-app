@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Orders Management | Bro's Thrifting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
+    
+    <style>
+    /* Reuse the color variables from main site */
+    :root {
+        --deep-black: #20262D;
+        --urban-green: #4B5A4D;
+        --cool-sky-blue: #7D8D97;
+        --neutral-beige: #D6D1C2;
+        --charcoal-gray: #5B5F66;
+        --accent: #8A9A8B;
+        --light-bg: #F5F3EC;
+        --forest-moss: #597e6a;
+        --oasis-teal: #598a82;
+        
+        --primary: var(--urban-green);
+        --secondary: var(--oasis-teal);
+        --tertiary: var(--cool-sky-blue);
+        --primary-rgb: 75, 90, 77;
+        --secondary-rgb: 89, 138, 130;
+        --accent-rgb: 138, 154, 139;
+        --dark: var(--deep-black);
+        --light: white;
+        --gray: var(--charcoal-gray);
+        --light-gray: #e0e0e0;
+        --highlight: var(--accent);
+        --error: #e63946;
+        --header-height: 70px;
+        
+        --border-radius: 8px;
+        --shadow: 0 4px 12px rgba(0,0,0,0.1);
+        --transition: all 0.3s ease;
+    }
+
+    /* Base styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--light-bg);
+        color: var(--dark);
+        line-height: 1.6;
+        padding-top: var(--header-height);
+    }
+
+    .container {
+        max-width: 1800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Header styles */
+    header {
+        background: var(--deep-black);
+        color: var(--neutral-beige);
+        padding: 10px 0;
+        box-shadow: var(--shadow);
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        color: var(--neutral-beige);
+    }
+
+    .logo span {
+        color: var(--cool-sky-blue);
+    }
+
+    .logo i {
+        margin-right: 8px;
+        color: var(--neutral-beige);
+    }
+
+    /* Main content styles */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .page-title {
+        font-size: 2rem;
+        color: var(--urban-green);
+    }
+
+    /* Filters section */
+    .filters-section {
+        background: var(--neutral-beige);
+        border-radius: var(--border-radius);
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--charcoal-gray);
+    }
+
+    .filters-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .filter-group {
+        margin-bottom: 15px;
+    }
+
+    .filter-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--urban-green);
+    }
+
+    .filter-control {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid var(--charcoal-gray);
+        border-radius: var(--border-radius);
+        background: var(--light-bg);
+        font-family: 'Poppins', sans-serif;
+        transition: var(--transition);
+    }
+
+    .filter-control:focus {
+        outline: none;
+        border-color: var(--urban-green);
+        box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
+    }
+
+    .daterangepicker {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Status badges */
+    .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background-color: #FFF3CD;
+        color: #856404;
+    }
+
+    .status-processing {
+        background-color: #D1ECF1;
+        color: #0C5460;
+    }
+
+    .status-shipped {
+        background-color: #D4EDDA;
+        color: #155724;
+    }
+
+    .status-delivered {
+        background-color: #E2E3E5;
+        color: #383D41;
+    }
+
+    .status-cancelled {
+        background-color: #F8D7DA;
+        color: #721C24;
+    }
+
+    .status-refunded {
+        background-color: #E2E3E5;
+        color: #383D41;
+    }
+
+    /* Orders table */
+    .orders-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+    }
+
+    .orders-table th {
+        background-color: var(--urban-green);
+        color: white;
+        text-align: left;
+        padding: 15px;
+        font-weight: 600;
+    }
+
+    .orders-table td {
+        padding: 15px;
+        border-bottom: 1px solid var(--light-gray);
+    }
+
+    .orders-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .orders-table tr:hover {
+        background-color: rgba(var(--primary-rgb), 0.05);
+    }
+
+    .order-number {
+        font-weight: 600;
+        color: var(--urban-green);
+    }
+
+    .customer-name {
+        font-weight: 500;
+    }
+
+    .order-total {
+        font-weight: 600;
+    }
+
+    .order-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--cool-sky-blue);
+        font-size: 1.1rem;
+        transition: var(--transition);
+    }
+
+    .action-btn:hover {
+        color: var(--urban-green);
+    }
+
+    /* Expandable row details */
+    .order-details {
+        display: none;
+        padding: 20px;
+        background-color: var(--light-bg);
+    }
+
+    .order-details.active {
+        display: block;
+    }
+
+    .order-items {
+        margin-bottom: 20px;
+    }
+
+    .order-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--light-gray);
+    }
+
+    .order-item:last-child {
+        border-bottom: none;
+    }
+
+    .item-image {
+        width: 60px;
+        height: 60px;
+        margin-right: 15px;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+    }
+
+    .item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .item-info {
+        flex: 1;
+    }
+
+    .item-name {
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+
+    .item-sku {
+        font-size: 0.8rem;
+        color: var(--gray);
+    }
+
+    .item-price {
+        font-weight: 600;
+        min-width: 80px;
+        text-align: right;
+    }
+
+    /* Order detail panel */
+    .order-panel {
+        position: fixed;
+        top: 0;
+        right: -450px;
+        width: 450px;
+        height: 100vh;
+        background: white;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+        z-index: 1100;
+        transition: var(--transition);
+        overflow-y: auto;
+        padding: 20px;
+    }
+
+    .order-panel.active {
+        right: 0;
+    }
+
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--light-gray);
+    }
+
+    .panel-title {
+        font-size: 1.5rem;
+        color: var(--urban-green);
+    }
+
+    .close-panel {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--gray);
+    }
+
+    .panel-section {
+        margin-bottom: 25px;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+        color: var(--urban-green);
+        display: flex;
+        align-items: center;
+    }
+
+    .section-title i {
+        margin-right: 10px;
+    }
+
+    .customer-info p {
+        margin-bottom: 8px;
+    }
+
+    .info-label {
+        font-weight: 500;
+        color: var(--gray);
+        display: inline-block;
+        width: 100px;
+    }
+
+    .shipping-method {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .shipping-method i {
+        margin-right: 10px;
+        color: var(--cool-sky-blue);
+    }
+
+    .status-select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--charcoal-gray);
+        border-radius: var(--border-radius);
+        background: var(--light-bg);
+        font-family: 'Poppins', sans-serif;
+        margin-bottom: 15px;
+    }
+
+    .panel-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .panel-btn {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .panel-btn-primary {
+        background: var(--urban-green);
+        color: white;
+    }
+
+    .panel-btn-primary:hover {
+        background: var(--oasis-teal);
+    }
+
+    .panel-btn-secondary {
+        background: var(--light-bg);
+        color: var(--dark);
+        border: 1px solid var(--charcoal-gray);
+    }
+
+    .panel-btn-secondary:hover {
+        background: var(--neutral-beige);
+    }
+
+    /* Batch actions */
+    .batch-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: var(--neutral-beige);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+    }
+
+    .batch-select {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .batch-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .batch-btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--light-bg);
+        color: var(--dark);
+        border: 1px solid var(--charcoal-gray);
+    }
+
+    .batch-btn:hover {
+        background: var(--neutral-beige);
+    }
+
+    .batch-btn-primary {
+        background: var(--urban-green);
+        color: white;
+        border-color: var(--urban-green);
+    }
+
+    .batch-btn-primary:hover {
+        background: var(--oasis-teal);
+    }
+
+    /* Overlay for panel */
+    .panel-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1099;
+        opacity: 0;
+        pointer-events: none;
+        transition: var(--transition);
+    }
+
+    .panel-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 1200px) {
+        .order-panel {
+            width: 400px;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .orders-table {
+            display: block;
+            overflow-x: auto;
+        }
+        
+        .batch-actions {
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .order-panel {
+            width: 100%;
+            right: -100%;
+        }
+        
+        .filters-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .order-actions {
+            flex-direction: column;
+        }
+        
+        .panel-actions {
+            flex-direction: column;
+        }
+        
+        .batch-buttons {
+            flex-wrap: wrap;
+        }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .fade-in {
+        animation: fadeIn 0.3s ease-in;
+    }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-shopping-bag"></i>Bro's <span>Thrifting</span>
+                </div>
+                <div class="user-actions">
+                    <a href="{{ url('/orders') }}" title="Orders" aria-label="Orders">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Orders</span>
+                    </a>
+                    <a href="{{ url('/logout') }}" title="Logout" aria-label="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Orders Management</h1>
+            <div class="header-actions">
+                <button class="batch-btn batch-btn-primary" id="print-labels">
+                    <i class="fas fa-tag"></i> Print Shipping Labels
+                </button>
+            </div>
+        </div>
+
+        <!-- Batch Actions -->
+        <div class="batch-actions">
+            <div class="batch-select">
+                <input type="checkbox" id="select-all">
+                <label for="select-all">Select all</label>
+                <span id="selected-count">0 orders selected</span>
+            </div>
+            <div class="batch-buttons">
+                <button class="batch-btn" id="export-selected">
+                    <i class="fas fa-file-export"></i> Export Selected
+                </button>
+                <select class="batch-btn" id="bulk-status">
+                    <option value="">Bulk Status Update</option>
+                    <option value="processing">Processing</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancel</option>
+                </select>
+                <button class="batch-btn" id="apply-bulk-action">
+                    <i class="fas fa-check"></i> Apply
+                </button>
+            </div>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="filters-section">
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label for="date-range">Date Range</label>
+                    <input type="text" id="date-range" class="filter-control" placeholder="Select date range">
+                </div>
+                <div class="filter-group">
+                    <label for="status-filter">Status</label>
+                    <select id="status-filter" class="filter-control" multiple>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="refunded">Refunded</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="customer-search">Customer Search</label>
+                    <input type="text" id="customer-search" class="filter-control" placeholder="Search by customer name or email">
+                </div>
+                <div class="filter-group">
+                    <label for="order-search">Order Search</label>
+                    <input type="text" id="order-search" class="filter-control" placeholder="Search by order #">
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="table-responsive">
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th width="40px"><input type="checkbox" id="select-all-header"></th>
+                        <th>Order #</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Order 1 -->
+                    <tr>
+                        <td><input type="checkbox" class="order-checkbox" data-order-id="1001"></td>
+                        <td class="order-number">#1001</td>
+                        <td>2025-06-15</td>
+                        <td class="customer-name">John Smith</td>
+                        <td>3</td>
+                        <td class="order-total">R 4,250</td>
+                        <td><span class="status-badge status-processing">Processing</span></td>
+                        <td class="order-actions">
+                            <button class="action-btn view-detail" data-order-id="1001" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn" title="Print Invoice">
+                                <i class="fas fa-print"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="order-details-row">
+                        <td colspan="8" class="order-details">
+                            <div class="order-items">
+                                <div class="order-item">
+                                    <div class="item-image">
+                                        <img src="https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" alt="Product">
+                                    </div>
+                                    <div class="item-info">
+                                        <div class="item-name">Vintage Air Jordan 1 Retro High OG</div>
+                                        <div class="item-sku">SKU: BT-SNEAK-001</div>
+                                    </div>
+                                    <div class="item-price">R 3,200</div>
+                                </div>
+                                <div class="order-item">
+                                    <div class="item-image">
+                                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" alt="Product">
+                                    </div>
+                                    <div class="item-info">
+                                        <div class="item-name">Vintage Aviator Sunglasses</div>
+                                        <div class="item-sku">SKU: BT-ACC-045</div>
+                                    </div>
+                                    <div class="item-price">R 1,499</div>
+                                </div>
+                            </div>
+                            <div class="order-summary">
+                                <div class="summary-row">
+                                    <span>Subtotal:</span>
+                                    <span>R 4,699</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Shipping:</span>
+                                    <span>R 150</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Discount:</span>
+                                    <span>-R 599</span>
+                                </div>
+                                <div class="summary-row total">
+                                    <span>Total:</span>
+                                    <span>R 4,250</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Order 2 -->
+                    <tr>
+                        <td><input type="checkbox" class="order-checkbox" data-order-id="1002"></td>
+                        <td class="order-number">#1002</td>
+                        <td>2025-06-14</td>
+                        <td class="customer-name">Sarah Johnson</td>
+                        <td>1</td>
+                        <td class="order-total">R 12,500</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td class="order-actions">
+                            <button class="action-btn view-detail" data-order-id="1002" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn" title="Print Invoice">
+                                <i class="fas fa-print"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="order-details-row">
+                        <td colspan="8" class="order-details">
+                            <div class="order-items">
+                                <div class="order-item">
+                                    <div class="item-image">
+                                        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" alt="Product">
+                                    </div>
+                                    <div class="item-info">
+                                        <div class="item-name">Vintage GG Supreme Shoulder Bag</div>
+                                        <div class="item-sku">SKU: BT-BAG-012</div>
+                                    </div>
+                                    <div class="item-price">R 12,500</div>
+                                </div>
+                            </div>
+                            <div class="order-summary">
+                                <div class="summary-row">
+                                    <span>Subtotal:</span>
+                                    <span>R 12,500</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Shipping:</span>
+                                    <span>R 0</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Discount:</span>
+                                    <span>R 0</span>
+                                </div>
+                                <div class="summary-row total">
+                                    <span>Total:</span>
+                                    <span>R 12,500</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Order 3 -->
+                    <tr>
+                        <td><input type="checkbox" class="order-checkbox" data-order-id="1003"></td>
+                        <td class="order-number">#1003</td>
+                        <td>2025-06-12</td>
+                        <td class="customer-name">Michael Brown</td>
+                        <td>2</td>
+                        <td class="order-total">R 2,800</td>
+                        <td><span class="status-badge status-shipped">Shipped</span></td>
+                        <td class="order-actions">
+                            <button class="action-btn view-detail" data-order-id="1003" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn" title="Print Invoice">
+                                <i class="fas fa-print"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="order-details-row">
+                        <td colspan="8" class="order-details">
+                            <div class="order-items">
+                                <div class="order-item">
+                                    <div class="item-image">
+                                        <img src="https://images.unsplash.com/photo-1604176354204-9268737828e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" alt="Product">
+                                    </div>
+                                    <div class="item-info">
+                                        <div class="item-name">Vintage 1991 Nevermind Tour T-Shirt</div>
+                                        <div class="item-sku">SKU: BT-TEE-078</div>
+                                    </div>
+                                    <div class="item-price">R 2,800</div>
+                                </div>
+                            </div>
+                            <div class="order-summary">
+                                <div class="summary-row">
+                                    <span>Subtotal:</span>
+                                    <span>R 2,800</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Shipping:</span>
+                                    <span>R 0</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Discount:</span>
+                                    <span>R 0</span>
+                                </div>
+                                <div class="summary-row total">
+                                    <span>Total:</span>
+                                    <span>R 2,800</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Order 4 -->
+                    <tr>
+                        <td><input type="checkbox" class="order-checkbox" data-order-id="1004"></td>
+                        <td class="order-number">#1004</td>
+                        <td>2025-06-10</td>
+                        <td class="customer-name">Emily Davis</td>
+                        <td>4</td>
+                        <td class="order-total">R 6,750</td>
+                        <td><span class="status-badge status-delivered">Delivered</span></td>
+                        <td class="order-actions">
+                            <button class="action-btn view-detail" data-order-id="1004" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn" title="Print Invoice">
+                                <i class="fas fa-print"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="order-details-row">
+                        <td colspan="8" class="order-details">
+                            <div class="order-items">
+                                <div class="order-item">
+                                    <div class="item-image">
+                                        <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" alt="Product">
+                                    </div>
+                                    <div class="item-info">
+                                        <div class="item-name">Vintage 90s Denim Trucker Jacket</div>
+                                        <div class="item-sku">SKU: BT-JKT-023</div>
+                                    </div>
+                                    <div class="item-price">R 1,250</div>
+                                </div>
+                                <div class="order-item">
+                                    <div class="item-image">
+                                        <img src="https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" alt="Product">
+                                    </div>
+                                    <div class="item-info">
+                                        <div class="item-name">Vintage Air Jordan 1 Retro High OG</div>
+                                        <div class="item-sku">SKU: BT-SNEAK-001</div>
+                                    </div>
+                                    <div class="item-price">R 3,200</div>
+                                </div>
+                            </div>
+                            <div class="order-summary">
+                                <div class="summary-row">
+                                    <span>Subtotal:</span>
+                                    <span>R 4,450</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Shipping:</span>
+                                    <span>R 150</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Discount:</span>
+                                    <span>-R 599</span>
+                                </div>
+                                <div class="summary-row total">
+                                    <span>Total:</span>
+                                    <span>R 4,001</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Order 5 -->
+                    <tr>
+                        <td><input type="checkbox" class="order-checkbox" data-order-id="1005"></td>
+                        <td class="order-number">#1005</td>
+                        <td>2025-06-08</td>
+                        <td class="customer-name">David Wilson</td>
+                        <td>1</td>
+                        <td class="order-total">R 85,000</td>
+                        <td><span class="status-badge status-cancelled">Cancelled</span></td>
+                        <td class="order-actions">
+                            <button class="action-btn view-detail" data-order-id="1005" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn" title="Print Invoice">
+                                <i class="fas fa-print"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="order-details-row">
+                        <td colspan="8" class="order-details">
+                            <div class="order-items">
+                                <div class="order-item">
+                                    <div class="item-image">
+                                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" alt="Product">
+                                    </div>
+                                    <div class="item-info">
+                                        <div class="item-name">Vintage Datejust 36mm Two-Tone</div>
+                                        <div class="item-sku">SKU: BT-WATCH-005</div>
+                                    </div>
+                                    <div class="item-price">R 85,000</div>
+                                </div>
+                            </div>
+                            <div class="order-summary">
+                                <div class="summary-row">
+                                    <span>Subtotal:</span>
+                                    <span>R 85,000</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Shipping:</span>
+                                    <span>R 0</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Discount:</span>
+                                    <span>R 0</span>
+                                </div>
+                                <div class="summary-row total">
+                                    <span>Total:</span>
+                                    <span>R 85,000</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Order Detail Panel -->
+    <div class="order-panel" id="orderPanel">
+        <div class="panel-header">
+            <h2 class="panel-title">Order Details</h2>
+            <button class="close-panel" id="closePanel">&times;</button>
+        </div>
+        
+        <div class="panel-section">
+            <h3 class="section-title"><i class="fas fa-user"></i> Customer Information</h3>
+            <div class="customer-info">
+                <p><span class="info-label">Name:</span> <span id="panel-customer-name">John Smith</span></p>
+                <p><span class="info-label">Email:</span> <span id="panel-customer-email">john.smith@example.com</span></p>
+                <p><span class="info-label">Phone:</span> <span id="panel-customer-phone">+27 83 123 4567</span></p>
+            </div>
+        </div>
+        
+        <div class="panel-section">
+            <h3 class="section-title"><i class="fas fa-map-marker-alt"></i> Shipping Address</h3>
+            <div id="panel-shipping-address">
+                123 Main Street<br>
+                Cape Town<br>
+                8001<br>
+                South Africa
+            </div>
+        </div>
+        
+        <div class="panel-section">
+            <h3 class="section-title"><i class="fas fa-box"></i> Order Items</h3>
+            <div class="order-items" id="panel-order-items">
+                <!-- Items will be inserted here by JavaScript -->
+            </div>
+            
+            <div class="order-summary">
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="panel-subtotal">R 4,699</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping:</span>
+                    <span id="panel-shipping">R 150</span>
+                </div>
+                <div class="summary-row">
+                    <span>Discount:</span>
+                    <span id="panel-discount">-R 599</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span id="panel-total">R 4,250</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel-section">
+            <h3 class="section-title"><i class="fas fa-truck"></i> Shipping Method</h3>
+            <div class="shipping-method">
+                <i class="fas fa-shipping-fast"></i>
+                <span id="panel-shipping-method">Standard Shipping (3-5 business days)</span>
+            </div>
+        </div>
+        
+        <div class="panel-section">
+            <h3 class="section-title"><i class="fas fa-info-circle"></i> Order Status</h3>
+            <select class="status-select" id="panel-status">
+                <option value="pending">Pending</option>
+                <option value="processing" selected>Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+            <textarea class="filter-control" id="panel-notes" placeholder="Add internal notes..." rows="3"></textarea>
+        </div>
+        
+        <div class="panel-actions">
+            <button class="panel-btn panel-btn-primary" id="save-order">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+            <button class="panel-btn panel-btn-secondary" id="print-invoice">
+                <i class="fas fa-print"></i> Print Invoice
+            </button>
+        </div>
+    </div>
+    
+    <!-- Panel Overlay -->
+    <div class="panel-overlay" id="panelOverlay"></div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2/dist/js/select2.min.js"></script>
+    
+    <script>
+    $(document).ready(function() {
+        // Initialize date range picker
+        $('#date-range').daterangepicker({
+            opens: 'left',
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear',
+                format: 'YYYY-MM-DD'
+            }
+        });
+
+        $('#date-range').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+            filterOrders();
+        });
+
+        $('#date-range').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+            filterOrders();
+        });
+
+        // Initialize multi-select for status filter
+        $('#status-filter').select2({
+            placeholder: "Select statuses",
+            allowClear: true
+        }).on('change', function() {
+            filterOrders();
+        });
+
+        // Customer search typeahead
+        $('#customer-search').on('input', function() {
+            filterOrders();
+        });
+
+        // Order search
+        $('#order-search').on('input', function() {
+            filterOrders();
+        });
+
+        // Toggle order details
+        $('.view-detail').click(function() {
+            const orderId = $(this).data('order-id');
+            openOrderPanel(orderId);
+        });
+
+        // Toggle expandable row details
+        $('.orders-table tbody tr').not('.order-details-row').click(function(e) {
+            // Don't toggle if clicking on a checkbox or action button
+            if ($(e.target).is('input[type="checkbox"], .action-btn')) {
+                return;
+            }
+            
+            const detailsRow = $(this).next('.order-details-row');
+            $('.order-details-row').not(detailsRow).find('.order-details').removeClass('active');
+            detailsRow.find('.order-details').toggleClass('active');
+        });
+
+        // Close panel
+        $('#closePanel, #panelOverlay').click(function() {
+            closeOrderPanel();
+        });
+
+        // Save order changes
+        $('#save-order').click(function() {
+            const newStatus = $('#panel-status').val();
+            const orderId = $('#orderPanel').data('order-id');
+            
+            // In a real app, this would be an AJAX call to your backend
+            console.log(`Updating order ${orderId} to status: ${newStatus}`);
+            
+            // Update the status in the table
+            $(`.order-checkbox[data-order-id="${orderId}"]`).closest('tr').find('.status-badge')
+                .removeClass('status-pending status-processing status-shipped status-delivered status-cancelled')
+                .addClass(`status-${newStatus}`)
+                .text(newStatus.charAt(0).toUpperCase() + newStatus.slice(1));
+                
+            // Show confirmation
+            alert(`Order ${orderId} status updated to ${newStatus}`);
+            closeOrderPanel();
+        });
+
+        // Print invoice
+        $('#print-invoice').click(function() {
+            const orderId = $('#orderPanel').data('order-id');
+            alert(`Printing invoice for order ${orderId}`);
+            // In a real app, this would open a print dialog with the invoice
+        });
+
+        // Print shipping labels
+        $('#print-labels').click(function() {
+            const selectedOrders = $('.order-checkbox:checked').map(function() {
+                return $(this).data('order-id');
+            }).get();
+            
+            if (selectedOrders.length === 0) {
+                alert('Please select at least one order to print labels');
+                return;
+            }
+            
+            alert(`Printing shipping labels for orders: ${selectedOrders.join(', ')}`);
+        });
+
+        // Export selected
+        $('#export-selected').click(function() {
+            const selectedOrders = $('.order-checkbox:checked').map(function() {
+                return $(this).data('order-id');
+            }).get();
+            
+            if (selectedOrders.length === 0) {
+                alert('Please select at least one order to export');
+                return;
+            }
+            
+            alert(`Exporting data for orders: ${selectedOrders.join(', ')}`);
+        });
+
+        // Bulk status update
+        $('#apply-bulk-action').click(function() {
+            const newStatus = $('#bulk-status').val();
+            if (!newStatus) {
+                alert('Please select a status');
+                return;
+            }
+            
+            const selectedOrders = $('.order-checkbox:checked').map(function() {
+                return $(this).data('order-id');
+            }).get();
+            
+            if (selectedOrders.length === 0) {
+                alert('Please select at least one order to update');
+                return;
+            }
+            
+            if (confirm(`Are you sure you want to update ${selectedOrders.length} order(s) to status "${newStatus}"?`)) {
+                // In a real app, this would be an AJAX call to your backend
+                console.log(`Updating orders ${selectedOrders.join(', ')} to status: ${newStatus}`);
+                
+                // Update the status in the table
+                selectedOrders.forEach(orderId => {
+                    $(`.order-checkbox[data-order-id="${orderId}"]`).closest('tr').find('.status-badge')
+                        .removeClass('status-pending status-processing status-shipped status-delivered status-cancelled')
+                        .addClass(`status-${newStatus}`)
+                        .text(newStatus.charAt(0).toUpperCase() + newStatus.slice(1));
+                });
+                
+                alert(`Updated ${selectedOrders.length} order(s) to ${newStatus}`);
+            }
+        });
+
+        // Select all checkbox
+        $('#select-all, #select-all-header').change(function() {
+            const isChecked = $(this).is(':checked');
+            $('.order-checkbox').prop('checked', isChecked);
+            updateSelectedCount();
+        });
+
+        // Individual checkbox change
+        $('.order-checkbox').change(function() {
+            updateSelectedCount();
+            
+            // Update "select all" checkbox state
+            const allChecked = $('.order-checkbox:checked').length === $('.order-checkbox').length;
+            $('#select-all, #select-all-header').prop('checked', allChecked);
+        });
+
+        // Filter orders function
+        function filterOrders() {
+            const dateRange = $('#date-range').val();
+            const statuses = $('#status-filter').val() || [];
+            const customerSearch = $('#customer-search').val().toLowerCase();
+            const orderSearch = $('#order-search').val().toLowerCase();
+            
+            let dateStart, dateEnd;
+            if (dateRange) {
+                const dates = dateRange.split(' - ');
+                dateStart = moment(dates[0], 'YYYY-MM-DD');
+                dateEnd = moment(dates[1], 'YYYY-MM-DD');
+            }
+            
+            $('.orders-table tbody tr').not('.order-details-row').each(function() {
+                const $row = $(this);
+                const orderDate = moment($row.find('td:nth-child(3)').text(), 'YYYY-MM-DD');
+                const status = $row.find('.status-badge').text().toLowerCase();
+                const customer = $row.find('.customer-name').text().toLowerCase();
+                const orderNum = $row.find('.order-number').text().toLowerCase();
+                
+                let matches = true;
+                
+                // Date filter
+                if (dateRange) {
+                    matches = matches && orderDate.isBetween(dateStart, dateEnd, null, '[]');
+                }
+                
+                // Status filter
+                if (statuses.length > 0) {
+                    matches = matches && statuses.includes(status);
+                }
+                
+                // Customer search
+                if (customerSearch) {
+                    matches = matches && customer.includes(customerSearch);
+                }
+                
+                // Order number search
+                if (orderSearch) {
+                    matches = matches && orderNum.includes(orderSearch);
+                }
+                
+                // Show/hide row
+                $row.toggle(matches);
+                $row.next('.order-details-row').toggle(matches);
+            });
+        }
+
+        // Update selected count
+        function updateSelectedCount() {
+            const count = $('.order-checkbox:checked').length;
+            $('#selected-count').text(`${count} order${count !== 1 ? 's' : ''} selected`);
+        }
+
+        // Open order panel
+        function openOrderPanel(orderId) {
+            // In a real app, this would fetch order details from your backend
+            console.log(`Fetching details for order ${orderId}`);
+            
+            // For demo purposes, we'll just show the panel with some sample data
+            $('#orderPanel').data('order-id', orderId);
+            
+            // Set panel content based on order ID
+            switch(orderId) {
+                case '1001':
+                    $('#panel-customer-name').text('John Smith');
+                    $('#panel-customer-email').text('john.smith@example.com');
+                    $('#panel-customer-phone').text('+27 83 123 4567');
+                    $('#panel-shipping-address').html('123 Main Street<br>Cape Town<br>8001<br>South Africa');
+                    $('#panel-status').val('processing');
+                    break;
+                case '1002':
+                    $('#panel-customer-name').text('Sarah Johnson');
+                    $('#panel-customer-email').text('sarah.j@example.com');
+                    $('#panel-customer-phone').text('+27 82 555 1234');
+                    $('#panel-shipping-address').html('45 Oak Avenue<br>Johannesburg<br>2001<br>South Africa');
+                    $('#panel-status').val('pending');
+                    break;
+                // Add cases for other orders as needed
+            }
+            
+            // Show panel
+            $('#orderPanel').addClass('active');
+            $('#panelOverlay').addClass('active');
+        }
+
+        // Close order panel
+        function closeOrderPanel() {
+            $('#orderPanel').removeClass('active');
+            $('#panelOverlay').removeClass('active');
+        }
+    });
+    </script>
+</body>
+</html>

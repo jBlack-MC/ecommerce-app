@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Bro's Thrifting - Premium secondhand fashion marketplace offering unique vintage items and streetwear">
+    <title>Bro's Thrifting | Premium Secondhand Fashion</title>
+
+    <!-- CSS Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /*
+            CSS Variables Section with Bro's Thrifting color palette
+        */
+        :root {
+            --deep-black: #20262D;
+            --urban-green: #4B5A4D;
+            --cool-sky-blue: #7D8D97;
+            --neutral-beige: #D6D1C2;
+            --charcoal-gray: #5B5F66;
+            --forest-moss: #597e6a;       /* A natural, earthy green */
+            --oasis-teal: #598a82;       /* A calming teal */
+            --accent: #8A9A8B;
+            --light-bg: #F5F3EC;
+            --border-radius: 8px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--deep-black);
+            scroll-behavior: smooth;
+        }
+
+        .navbar {
+            background-color: var(--deep-black);
+            box-shadow: var(--shadow);
+            padding: 15px 0;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--neutral-beige);
+        }
+
+        .navbar-brand span {
+            color: var(--cool-sky-blue);
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--neutral-beige) !important;
+            transition: var(--transition);
+            margin: 0 10px;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--cool-sky-blue) !important;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--cool-sky-blue);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-weight: 600;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--urban-green);
+            border-color: var(--urban-green);
+        }
+
+        .btn-primary:hover {
+            background-color: #597e6a;
+            border-color: #598a82;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-secondary {
+            background-color: var(--cool-sky-blue);
+            border-color: var(--cool-sky-blue);
+        }
+
+        .btn-secondary:hover {
+            background-color: #6c7b85;
+            border-color: #6c7b85;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        h2 {
+            font-weight: 700;
+            position: relative;
+            margin-bottom: 40px;
+            color: var(--urban-green);
+            text-align: center;
+        }
+
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--urban-green), var(--cool-sky-blue));
+            border-radius: 2px;
+        }
+
+        .card {
+            border: 2px solid var(--charcoal-gray);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            margin-bottom: 30px;
+            overflow: hidden;
+            background-color: var(--neutral-beige);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-img-top {
+            transform: scale(1.05);
+        }
+
+        .category-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--urban-green);
+            color: var(--neutral-beige);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .style-badge {
+            display: inline-block;
+            background-color: var(--cool-sky-blue);
+            color: var(--neutral-beige);
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        #hero {
+            position: relative;
+            color: var(--neutral-beige);
+            padding: 140px 0;
+            text-align: center;
+            overflow: hidden;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            background-color: var(--urban-green);
+        }
+
+        #hero h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        #hero p {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            margin-bottom: 35px;
+        }
+
+        .feature-box {
+            text-align: center;
+            padding: 30px;
+            background-color: var(--neutral-beige);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            height: 100%;
+            transition: var(--transition);
+            border: 1px solid var(--charcoal-gray);
+        }
+
+        .feature-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--urban-green);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .feature-box:hover .feature-icon {
+            transform: scale(1.1);
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--urban-green), var(--deep-black));
+            color: var(--neutral-beige);
+            padding: 25px 0 15px;
+            margin-top: 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+            align-items: start;
+        }
+
+        .footer-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--neutral-beige);
+        }
+
+        .footer-links {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+
+        .footer-links a {
+            color: rgba(214, 209, 194, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        .footer-links a:hover {
+            color: var(--neutral-beige);
+            transform: translateX(5px);
+        }
+
+        .social-icons {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .social-icons strong {
+            margin-right: 8px;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: rgba(214, 209, 194, 0.1);
+            border-radius: 50%;
+            color: var(--neutral-beige);
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            background: var(--cool-sky-blue);
+            transform: translateY(-2px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(214, 209, 194, 0.1);
+            font-size: 0.8rem;
+        }
+
+        .subscribe-button {
+            width: 100%;
+            padding: 12px;
+            background: var(--cool-sky-blue);
+            color: var(--neutral-beige);
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .subscribe-button:hover {
+            background: var(--urban-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .form-control {
+            border-radius: var(--border-radius);
+            padding: 12px 15px;
+            border: 1px solid var(--charcoal-gray);
+            transition: var(--transition);
+            background-color: var(--neutral-beige);
+        }
+
+        .form-control:focus {
+            border-color: var(--urban-green);
+            box-shadow: 0 0 0 0.25rem rgba(75, 90, 77, 0.25);
+        }
+
+        /* Founders Section Styles */
+        #founders {
+            background-color: var(--light-bg);
+            padding: 80px 0;
+        }
+
+        .founders-title {
+            font-weight: 700;
+            position: relative;
+            margin-bottom: 40px;
+            color: var(--urban-green);
+            text-align: center;
+        }
+
+        .founders-title:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--urban-green), var(--cool-sky-blue));
+            border-radius: 2px;
+        }
+
+        .founders {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 3rem;
+        }
+
+        .founder-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            flex: 1 1 300px;
+            max-width: 350px;
+            text-align: center;
+            border: 1px solid var(--charcoal-gray);
+        }
+
+        .founder-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .founder-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--urban-green);
+            border-radius: 50%; /* Makes the image round */
+            width: 180px; /* Fixed width for round shape */
+            height: 180px; /* Fixed height for round shape */
+            margin: 20px auto 10px; /* Centers the round image */
+            object-fit: cover; /* Ensures image fills the circle */
+            border: 3px solid var(--urban-green); /* Adds border around round image */
+        }
+
+        .founder-info {
+            padding: 25px;
+        }
+
+        .founder-info h3 {
+            color: var(--urban-green);
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .founder-info p {
+            color: var(--charcoal-gray);
+            margin-bottom: 15px;
+        }
+
+        .founder-social {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .founder-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: var(--cool-sky-blue);
+            color: white;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .founder-social a:hover {
+            background-color: var(--urban-green);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 992px) {
+            .footer-content {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            section {
+                padding: 60px 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            #hero {
+                padding: 100px 0;
+                min-height: 500px;
+            }
+
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-section h3::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            #hero h1 {
+                font-size: 2.2rem;
+            }
+
+            #hero p {
+                font-size: 1.1rem;
+            }
+
+            .social-icons {
+                justify-content: center;
+            }
+
+            section {
+                padding: 50px 0;
+            }
+
+            .founder-card {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                Bro's <span>Thrifting</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#categories">Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#founders">Founders</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="hero">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h1>Thrift Finds for Every Style</h1>
+                    <p>Discover premium secondhand fashion and unique vintage items tailored to your taste and budget.</p>
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        <a href="#categories" class="btn btn-light btn-lg me-2">Explore Collection</a>
+                        <a href="#contact" class="btn btn-outline-light btn-lg">Visit Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="categories">
+        <div class="container">
+            <div class="row">
+                <h2>Our Thrift Categories</h2>
+                <div class="col-lg-8 mx-auto text-center">
+                    <p class="lead">Find your perfect style from our carefully curated selection</p>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <!-- Streetwear Collection Card -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                        <img src="https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" class="card-img-top" alt="Streetwear Collection">
+                        <span class="category-badge">Streetwear</span>
+                        <div class="card-body">
+                            <h5 class="card-title">Streetwear Collection</h5>
+                            <p class="card-text">Discover rare vintage streetwear and contemporary urban styles.</p>
+                            <div class="mb-3">
+                                <span class="style-badge">Sneakers</span>
+                                <span class="style-badge">Hoodies</span>
+                                <span class="style-badge">Tees</span>
+                                <span class="style-badge">Vintage</span>
+                                <span class="style-badge">Limited</span>
+                            </div>
+                            <a href="#" class="btn btn-primary">View Collection</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Casual & Everyday Fits Card -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                        <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" class="card-img-top" alt="Casual & Everyday Fits">
+                        <span class="category-badge">Casual</span>
+                        <div class="card-body">
+                            <h5 class="card-title">Casual & Everyday Fits</h5>
+                            <p class="card-text">Comfortable yet stylish outfits for your daily wardrobe.</p>
+                            <div class="mb-3">
+                                <span class="style-badge">Jeans</span>
+                                <span class="style-badge">Shirts</span>
+                                <span class="style-badge">Jackets</span>
+                                <span class="style-badge">Minimalist</span>
+                                <span class="style-badge">Comfort</span>
+                            </div>
+                            <a href="#" class="btn btn-primary">View Collection</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Luxury & Vintage Finds Card -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" class="card-img-top" alt="Luxury & Vintage Finds">
+                        <span class="category-badge">Luxury</span>
+                        <div class="card-body">
+                            <h5 class="card-title">Luxury & Vintage Finds</h5>
+                            <p class="card-text">High-end designer pieces and rare vintage treasures.</p>
+                            <div class="mb-3">
+                                <span class="style-badge">Designer</span>
+                                <span class="style-badge">Bags</span>
+                                <span class="style-badge">Watches</span>
+                                <span class="style-badge">Retro</span>
+                                <span class="style-badge">Rare</span>
+                            </div>
+                            <a href="#" class="btn btn-primary">View Collection</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accessories & Extras Card -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                        <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" class="card-img-top" alt="Accessories & Extras">
+                        <span class="category-badge">Accessories</span>
+                        <div class="card-body">
+                            <h5 class="card-title">Accessories & Extras</h5>
+                            <p class="card-text">Complete your look with these statement pieces.</p>
+                            <div class="mb-3">
+                                <span class="style-badge">Hats</span>
+                                <span class="style-badge">Belts</span>
+                                <span class="style-badge">Jewelry</span>
+                                <span class="style-badge">Sunglasses</span>
+                                <span class="style-badge">Watches</span>
+                            </div>
+                            <a href="#" class="btn btn-primary">View Collection</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Eco-Friendly & Sustainable Card -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                        <img src="https://images.unsplash.com/photo-1604176354204-9268737828e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" class="card-img-top" alt="Eco-Friendly & Sustainable">
+                        <span class="category-badge">Eco-Friendly</span>
+                        <div class="card-body">
+                            <h5 class="card-title">Eco-Friendly & Sustainable</h5>
+                            <p class="card-text">Fashion that looks good and does good for the planet.</p>
+                            <div class="mb-3">
+                                <span class="style-badge">Upcycled</span>
+                                <span class="style-badge">Recycled</span>
+                                <span class="style-badge">Ethical</span>
+                                <span class="style-badge">Organic</span>
+                                <span class="style-badge">Sustainable</span>
+                            </div>
+                            <a href="#" class="btn btn-primary">View Collection</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seasonal Collections Card -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" class="card-img-top" alt="Seasonal Collections">
+                        <span class="category-badge">Seasonal</span>
+                        <div class="card-body">
+                            <h5 class="card-title">Seasonal Collections</h5>
+                            <p class="card-text">Curated selections for every season and occasion.</p>
+                            <div class="mb-3">
+                                <span class="style-badge">Summer</span>
+                                <span class="style-badge">Winter</span>
+                                <span class="style-badge">Fall</span>
+                                <span class="style-badge">Spring</span>
+                                <span class="style-badge">Holiday</span>
+                            </div>
+                            <a href="#" class="btn btn-primary">View Collection</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" style="background-color: var(--neutral-beige);">
+        <div class="container">
+            <div class="row">
+                <h2>Why Choose Bro's Thrifting?</h2>
+            </div>
+            <div class="row mt-4">
+                <!-- Quality Feature -->
+                <div class="col-md-4">
+                    <div class="feature-box">
+                        <i class="fas fa-star feature-icon"></i>
+                        <h4>Curated Quality</h4>
+                        <p>Every item is hand-selected by our team of thrifting experts for quality and style.</p>
+                    </div>
+                </div>
+                <!-- Sustainability Feature -->
+                <div class="col-md-4">
+                    <div class="feature-box">
+                        <i class="fas fa-leaf feature-icon"></i>
+                        <h4>Sustainable Fashion</h4>
+                        <p>Reduce your environmental impact by choosing pre-loved fashion.</p>
+                    </div>
+                </div>
+                <!-- Delivery Feature -->
+                <div class="col-md-4">
+                    <div class="feature-box">
+                        <i class="fas fa-truck feature-icon"></i>
+                        <h4>Fast Delivery</h4>
+                        <p>Quick shipping with eco-friendly packaging to get your finds to you faster.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2>Our Thrifting Story</h2>
+                    <p>Bro's Thrifting started with Siya, Kagiso, and one mystery founder — three friends who shared a passion for style, sustainability, and scoring the best deals. What began as a small weekend thrifting hustle has grown into a premier online destination for fashion lovers everywhere.</p>
+                    <p>We pride ourselves on offering an exceptional selection of secondhand fashion, from streetwear to luxury vintage, all while maintaining our commitment to affordability and sustainability.</p>
+                    <a href="#categories" class="btn btn-primary mt-3">View Collections</a>
+                </div>
+                <div class="col-lg-6">
+                    <img src="https://images.unsplash.com/photo-1520006403909-838d6b92c22e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" class="img-fluid rounded shadow" alt="Bro's Thrifting Founders">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Founders Section -->
+    <section id="founders" style="background-color: var(--light-bg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="founders-title">Meet the Founders</h2>
+                    <p class="text-center lead mb-5">The passionate team behind Bro's Thrifting</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="founder-card">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" class="founder-img" alt="Siya - Founder">
+                        <div class="founder-info">
+                            <h3>Siya</h3>
+                            <p class="text-muted">Curator of rare finds and sneaker enthusiast</p>
+                            <p>With an impeccable eye for streetwear and vintage fashion, Siya sources the most unique pieces for our collection. His passion for sneakers is unmatched.</p>
+                            <div class="founder-social">
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6">
+                    <div class="founder-card">
+                        <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" class="founder-img" alt="Kagiso - Founder">
+                        <div class="founder-info">
+                            <h3>Kagiso</h3>
+                            <p class="text-muted">Vintage hunter and style curator</p>
+                            <p>Kagiso has a sixth sense for finding hidden gems in the most unexpected places. His knowledge of fashion history helps authenticate all our vintage pieces.</p>
+                            <div class="founder-social">
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mx-auto">
+                    <div class="founder-card">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" class="founder-img" alt="Mystery Founder">
+                        <div class="founder-info">
+                            <h3>Mystery Founder</h3>
+                            <p class="text-muted">The enigmatic third "bro"</p>
+                            <p>This mysterious figure appears when least expected with the most incredible finds. Their identity remains secret, but their thrifting skills are legendary.</p>
+                            <div class="founder-social">
+                                <a href="#"><i class="fas fa-question"></i></a>
+                                <a href="#"><i class="fas fa-question"></i></a>
+                                <a href="#"><i class="fas fa-question"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" style="background-color: var(--neutral-beige);">
+        <div class="container">
+            <div class="row">
+                <h2>Get In Touch</h2>
+                <!-- Contact Form -->
+                <div class="col-lg-6">
+                    <form id="contactForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Your Name" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" placeholder="Your Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Subject">
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control" rows="5" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+                <!-- Contact Information -->
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h4 class="mb-4">Visit Us</h4>
+                            <p><i class="fas fa-map-marker-alt me-2"></i> 321 Thrift Avenue, Urbanville, CA 90210</p>
+                            <p><i class="fas fa-phone me-2"></i> (555) 987-6543</p>
+                            <p><i class="fas fa-envelope me-2"></i> hello@brosthrifting.com</p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <!-- Company Info -->
+                <div class="footer-section">
+                    <h3>Bro's Thrifting</h3>
+                    <p>Your one-stop destination for all things vintage and secondhand fashion. We deliver style straight to your door!</p>
+                    <div class="social-icons">
+                        <strong>Follow us</strong>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+
+                <!-- Account Links -->
+                <div class="footer-section">
+                    <h3>Account</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">My Account</a></li>
+                        <li><a href="#">Track Order</a></li>
+                        <li><a href="#">Personal Information</a></li>
+                        <li><a href="#">Invoices</a></li>
+                    </ul>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Shop All</a></li>
+                        <li><a href="#">New Arrivals</a></li>
+                        <li><a href="#">Best Sellers</a></li>
+                        <li><a href="#">Special Offers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Company Links -->
+                <div class="footer-section">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <!-- Customer Service Links -->
+                <div class="footer-section">
+                    <h3>Customer Service</h3>
+                    <ul class="footer-links">
+                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Shipping Policy</a></li>
+                        <li><a href="#">Returns & Refunds</a></li>
+                        <li><a href="#">Track Order</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter Subscription -->
+                <div class="footer-section">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to get special offers, new arrivals, and thrifting tips.</p>
+                    <div class="search-bar" style="margin-top: 15px;">
+                        <input type="text" class="form-control" placeholder="Your email address">
+                    </div>
+                    <button class="subscribe-button" style="margin-top: 10px;">
+                        Subscribe
+                   
+                    </button>
+                </div>
+            </div>
+
+            <!-- Copyright Notice -->
+            <div class="copyright">
+                <p>&copy; 2025 Bro's Thrifting. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--cool-sky-blue);"></i></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Document ready function to ensure DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Navbar scroll effect
+            const navbar = document.querySelector('.navbar');
+
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+
+                        // Close mobile menu if open
+                        const navbarCollapse = document.querySelector('.navbar-collapse');
+                        if (navbarCollapse.classList.contains('show')) {
+                            const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+                                toggle: false
+                            });
+                            bsCollapse.hide();
+                        }
+                    }
+                });
+            });
+
+            // Form submission handling
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    // Simple validation
+                    const inputs = this.querySelectorAll('input, textarea');
+                    let isValid = true;
+
+                    inputs.forEach(input => {
+                        if (input.hasAttribute('required') && !input.value.trim()) {
+                            input.classList.add('is-invalid');
+                            isValid = false;
+                        } else {
+                            input.classList.remove('is-invalid');
+                        }
+                    });
+
+                    if (isValid) {
+                        // Here you would typically send the form data to a server
+                        alert('Thank you for your message! We will get back to you soon.');
+                        this.reset();
+                    }
+                });
+            }
+
+            // Newsletter subscription
+            const subscribeButton = document.querySelector('.subscribe-button');
+            if (subscribeButton) {
+                subscribeButton.addEventListener('click', function() {
+                    const emailInput = this.parentElement.querySelector('input');
+                    if (emailInput && emailInput.value) {
+                        // Validate email format
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (emailRegex.test(emailInput.value)) {
+                            alert('Thank you for subscribing to our newsletter!');
+                            emailInput.value = '';
+                        } else {
+                            alert('Please enter a valid email address.');
+                        }
+                    } else {
+                        alert('Please enter your email address.');
+                    }
+                });
+            }
+
+            // Card hover effect enhancement
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px)';
+                    this.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                });
+            });
+
+            // Responsive adjustments
+            function handleResponsiveChanges() {
+                const screenWidth = window.innerWidth;
+
+                // Adjust hero section padding for mobile
+                const heroSection = document.getElementById('hero');
+                if (heroSection) {
+                    if (screenWidth < 768) {
+                        heroSection.style.padding = '80px 0';
+                    } else {
+                        heroSection.style.padding = '140px 0';
+                    }
+                }
+            }
+
+            // Run on load and resize
+            handleResponsiveChanges();
+            window.addEventListener('resize', handleResponsiveChanges);
+        });
+    </script>
+</body>
+</html>

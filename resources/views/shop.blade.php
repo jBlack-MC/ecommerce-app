@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>@yield('title', 'Bro\'s Thrifting')</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Bro's Thrifting - Premium secondhand fashion marketplace offering unique vintage items and streetwear">
+
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS Variables -->
+    <style>
+    :root {
+        /* Bro's Thrifting Color Palette */
+        --deep-black: #20262D;
+        --urban-green: #4B5A4D;
+        --cool-sky-blue: #7D8D97;
+        --neutral-beige: #D6D1C2;
+        --charcoal-gray: #5B5F66;
+        --accent: #8A9A8B;
+        --light-bg: #F5F3EC;
+        --forest-moss: #597e6a;
+        --oasis-teal: #598a82;
+        
+        /* Additional variables */
+        --primary: var(--urban-green);
+        --secondary: var(--oasis-teal);
+        --tertiary: var(--cool-sky-blue);
+        --primary-rgb: 75, 90, 77;
+        --secondary-rgb: 89, 138, 130;
+        --accent-rgb: 138, 154, 139;
+        --dark: var(--deep-black);
+        --light: white;
+        --gray: var(--charcoal-gray);
+        --light-gray: #e0e0e0;
+        --highlight: var(--accent);
+        --error: #e63946;
+        --header-height: 70px;
+        
+        /* Other variables */
+        --border-radius: 8px;
+        --shadow: 0 4px 12px rgba(0,0,0,0.1);
+        --transition: all 0.3s ease;
+    }
+
+    /* ========== BASE STYLES ========== */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--light-bg);
+        color: var(--dark);
+        line-height: 1.6;
+        padding-top: var(--header-height); /* Account for fixed header */
+    }
+
+    /* Smooth scrolling for modern browsers */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* ========== HEADER STYLES ========== */
+    header {
+        background: var(--deep-black);
+        color: var(--neutral-beige);
+        padding: 10px 0;
+        box-shadow: var(--shadow);
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        color: var(--neutral-beige);
+    }
+
+    .logo span {
+        color: var(--cool-sky-blue);
+    }
+
+    .logo i {
+        margin-right: 8px;
+        color: var(--neutral-beige);
+    }
+
+    .search-bar {
+        flex: 1;
+        min-width: 220px;
+        max-width: 550px;
+        position: relative;
+    }
+
+    .search-bar input {
+        width: 100%;
+        padding: 10px 18px 10px 40px;
+        border: none;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        background-color: var(--neutral-beige);
+    }
+
+    .search-bar input:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px var(--highlight);
+    }
+
+    .search-bar::before {
+        content: '\f002';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray);
+    }
+
+    .user-actions {
+        display: flex;
+        gap: 15px;
+    }
+
+    .user-actions a {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        color: var(--neutral-beige);
+        font-size: 135%;
+        text-decoration: none;
+        transition: var(--transition);
+        position: relative;
+    }
+
+    .user-actions a:hover {
+        color: var(--cool-sky-blue);
+    }
+
+    .user-actions a span {
+        margin-top: 4px;
+        font-size: 0.75rem;
+        opacity: 0;
+        color: transparent;
+        transform: translateY(5px);
+        transition: all 0.3s ease;
+        pointer-events: none;
+    }
+
+    /* Hover effect for user actions */
+    .user-actions a:hover span {
+        opacity: 1;
+        transform: translateY(0);
+        color: var(--cool-sky-blue);
+        pointer-events: auto;
+    }
+
+    /* ========== MAIN CONTENT LAYOUT ========== */
+    .content-wrapper {
+        display: flex;
+        gap: 25px;
+        margin-top: 25px;
+    }
+
+    /* ========== FILTERS SIDEBAR ========== */
+    .filters {
+        width: 280px;
+        background: var(--neutral-beige);
+        border-radius: var(--border-radius);
+        padding: 20px;
+        box-shadow: var(--shadow);
+        height: fit-content;
+        position: sticky;
+        top: calc(var(--header-height) + 20px); /* Stick below header */
+        max-height: calc(100vh - var(--header-height) - 40px);
+        overflow-y: auto;
+        border: 1px solid var(--charcoal-gray);
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .filters h2 {
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--light-gray);
+        color: var(--urban-green);
+    }
+
+    .filter-section {
+        margin-bottom: 25px;
+    }
+
+    .filter-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+        color: var(--dark);
+    }
+
+    .filter-options {
+        padding-left: 10px;
+    }
+
+    .filter-option {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Modern checkbox styling */
+    .filter-option input {
+        margin-right: 10px;
+        width: 16px;
+        height: 16px;
+        appearance: none;
+        border: 2px solid var(--light-gray);
+        border-radius: 3px;
+        cursor: pointer;
+        position: relative;
+        transition: var(--transition);
+    }
+
+    .filter-option input:checked {
+        background-color: var(--urban-green);
+        border-color: var(--urban-green);
+    }
+
+    .filter-option input:checked::after {
+        content: '\f00c';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        color: white;
+        font-size: 10px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .category-header {
+        font-weight: 600;
+        cursor: pointer;
+        margin: 15px 0 5px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px;
+        background-color: var(--light-bg);
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        border: 1px solid var(--charcoal-gray);
+    }
+
+    .category-header:hover {
+        background-color: var(--cool-sky-blue);
+        color: white;
+    }
+
+    .category-header::after {
+        content: "+";
+        font-size: 1.2em;
+    }
+
+    .category-header.collapsed::after {
+        content: "-";
+    }
+
+    .category-content {
+        display: none;
+        padding-left: 15px;
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.3s ease;
+    }
+
+    .category-content.expanded {
+        display: block;
+        max-height: 500px; /* Adjust based on content */
+    }
+
+    .location-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .location-badge {
+        background-color: var(--light-bg);
+        border: 1px solid var(--charcoal-gray);
+        border-radius: var(--border-radius);
+        padding: 5px 10px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .location-badge.active {
+        background-color: var(--urban-green);
+        color: white;
+        border-color: var(--urban-green);
+    }
+
+    .price-range {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .price-range input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--charcoal-gray);
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        background-color: var(--neutral-beige);
+    }
+
+    .price-range input:focus {
+        border-color: var(--urban-green);
+        outline: none;
+    }
+
+    /* ========== MAIN CONTENT AREA ========== */
+    .main-content {
+        flex: 1;
+    }
+
+    .results-header {
+        background: var(--neutral-beige);
+        border-radius: var(--border-radius);
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+        border: 1px solid var(--charcoal-gray);
+    }
+
+    .results-header h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--urban-green);
+    }
+
+    .results-header span {
+        color: var(--gray);
+        font-size: 0.9rem;
+    }
+
+    .sort-options {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .sort-options select {
+        padding: 8px 15px;
+        border: 1px solid var(--charcoal-gray);
+        border-radius: var(--border-radius);
+        background: var(--neutral-beige);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .sort-options select:focus {
+        border-color: var(--urban-green);
+        outline: none;
+    }
+
+    /* ========== PRODUCTS GRID ========== */
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+    }
+
+    .product-card {
+        background: var(--neutral-beige);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        position: relative;
+        border: 1px solid var(--charcoal-gray);
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .product-card.hidden {
+        display: none;
+    }
+
+    .product-card.filtered-out {
+        opacity: 0;
+        transform: translateY(20px);
+        pointer-events: none;
+        position: absolute;
+        height: 0;
+        overflow: hidden;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    .product-badge {
+        position: absolute;
+        top: 10px;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: white;
+        z-index: 1;
+    }
+
+    .sale-badge {
+        left: 10px;
+        background: var(--oasis-teal);
+    }
+
+    .sponsored-badge {
+        right: 10px;
+        background: var(--urban-green);
+    }
+
+    .product-image {
+        height: 200px;
+        background: var(--light-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .product-image:hover img {
+        transform: scale(1.05);
+    }
+
+    .product-image i {
+        font-size: 5rem;
+        color: rgba(0, 0, 0, 0.1);
+    }
+
+    .product-info {
+        padding: 20px;
+    }
+
+    .product-brand {
+        color: var(--gray);
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+
+    .product-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        min-height: 50px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .price-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .current-price {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--urban-green);
+    }
+
+    .original-price {
+        font-size: 1rem;
+        color: var(--gray);
+        text-decoration: line-through;
+    }
+
+    .stock-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+        color: var(--oasis-teal);
+    }
+
+    .locations {
+        display: flex;
+        gap: 5px;
+        font-size: 0.8rem;
+        color: var(--gray);
+    }
+
+    .rating {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 15px;
+    }
+
+    .stars {
+        color: #ffc107;
+    }
+
+    .rating-count {
+        font-size: 0.85rem;
+        color: var(--gray);
+    }
+
+    .add-to-cart {
+        width: 100%;
+        padding: 12px;
+        background: var(--urban-green);
+        color: white;
+        border: none;
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .add-to-cart:hover {
+        background: var(--oasis-teal);
+        transform: translateY(-2px);
+    }
+
+    /* ========== FOOTER STYLES ========== */
+    footer {
+        background: linear-gradient(135deg, var(--urban-green), var(--deep-black));
+        color: var(--neutral-beige);
+        padding: 25px 0 15px;
+        margin-top: 30px;
+    }
+
+    .footer-content {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 15px;
+        align-items: start;
+    }
+
+    .footer-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+        position: relative;
+        padding-bottom: 5px;
+    }
+
+    .footer-section h3::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: var(--neutral-beige);
+    }
+
+    .footer-links {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .footer-links li {
+        margin-bottom: 8px;
+    }
+
+    .footer-links a {
+        color: rgba(214, 209, 194, 0.8);
+        text-decoration: none;
+        transition: var(--transition);
+        font-size: 0.9rem;
+        display: inline-block;
+    }
+
+    .footer-links a:hover {
+        color: var(--neutral-beige);
+        transform: translateX(5px);
+    }
+
+    .social-icons {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+        font-size: 0.9rem;
+    }
+
+    .social-icons strong {
+        margin-right: 8px;
+    }
+
+    .social-icons a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba(214, 209, 194, 0.1);
+        border-radius: 50%;
+        color: var(--neutral-beige);
+        transition: var(--transition);
+    }
+
+    .social-icons a:hover {
+        background: var(--cool-sky-blue);
+        transform: translateY(-2px);
+    }
+
+    .copyright {
+        text-align: center;
+        padding-top: 15px;
+        border-top: 1px solid rgba(214, 209, 194, 0.1);
+        font-size: 0.8rem;
+    }
+
+    .subscribe-button {
+        width: 100%;
+        padding: 12px;
+        background: var(--cool-sky-blue);
+        color: var(--neutral-beige);
+        border: none;
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .subscribe-button:hover {
+        background: var(--urban-green);
+        transform: translateY(-2px);
+    }
+
+    /* ========== RESPONSIVE DESIGN ========== */
+    @media (max-width: 1200px) {
+        .footer-content {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 992px) {
+        .content-wrapper {
+            flex-direction: column;
+        }
+
+        .filters {
+            width: 100%;
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            z-index: 999;
+            max-height: calc(100vh - var(--header-height));
+            transform: translateX(-100%);
+            opacity: 0;
+            border-radius: 0;
+            border-left: none;
+            border-right: none;
+        }
+
+        .filters.active {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .main-content {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .header-content {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .search-bar {
+            margin: 10px 0;
+        }
+
+        .results-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .sort-options {
+            width: 100%;
+        }
+
+        .sort-options select {
+            width: 100%;
+        }
+
+        .footer-content {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .products-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .price-range {
+            flex-direction: column;
+        }
+
+        .footer-section h3::after {
+            width: 30px;
+        }
+    }
+
+    @media (max-width: 420px) {
+        .footer-content {
+            grid-template-columns: 1fr;
+        }
+
+        .filters {
+            padding: 15px;
+        }
+
+        .product-title {
+            font-size: 1rem;
+        }
+
+        .add-to-cart {
+            font-size: 0.95rem;
+            padding: 10px;
+        }
+    }
+
+    /* ========== ANIMATIONS ========== */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .product-card {
+        animation: fadeIn 0.5s ease forwards;
+    }
+
+    /* Delay animations for grid items */
+    .products-grid .product-card:nth-child(1) { animation-delay: 0.1s; }
+    .products-grid .product-card:nth-child(2) { animation-delay: 0.2s; }
+    .products-grid .product-card:nth-child(3) { animation-delay: 0.3s; }
+    .products-grid .product-card:nth-child(4) { animation-delay: 0.4s; }
+    .products-grid .product-card:nth-child(5) { animation-delay: 0.5s; }
+    .products-grid .product-card:nth-child(6) { animation-delay: 0.6s; }
+
+    /* Loading spinner */
+    .loading-spinner {
+        display: none;
+        width: 40px;
+        height: 40px;
+        margin: 20px auto;
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top: 4px solid var(--urban-green);
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Mobile filter overlay */
+    .mobile-filter-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .mobile-filter-overlay.active {
+        display: block;
+        opacity: 1;
+    }
+    </style>
+</head>
+<body>
+    <!-- ========== HEADER SECTION ========== -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo with shopping bag icon -->
+                <div class="logo">
+                    <i class="fas fa-shopping-bag"></i>Bro's <span>Thrifting</span>
+                </div>
+
+                <!-- Search bar with enhanced accessibility -->
+                <div class="search-bar">
+                    <input type="text" placeholder="Search for vintage, streetwear, accessories..." aria-label="Search products" id="search-input">
+                </div>
+
+                <!-- User actions with hover effects -->
+                <div class="user-actions">
+                    <a href="/auth/Login.html" title="Account" aria-label="Account">
+                        <i class="fas fa-user"></i>
+                        <span>Account</span>
+                    </a>
+                    <a href="/wishlist.html" title="Wishlist" aria-label="Wishlist">
+                        <i class="fas fa-heart"></i>
+                        <span>Wishlist</span>
+                    </a>
+                    <!-- Add cart indicator badge to cart icon -->
+                    <a href="/cart/cart.html" title="Cart" aria-label="Cart" style="position:relative;">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Cart</span>
+                        <span class="cart-indicator" style="display:none;position:absolute;top:-8px;right:-8px;background:var(--error);color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== MAIN CONTENT SECTION ========== -->
+    <div class="container">
+        <div class="content-wrapper">
+            <!-- Mobile filter overlay -->
+            <div class="mobile-filter-overlay" id="mobileFilterOverlay"></div>
+
+            <!-- ========== FILTERS SIDEBAR ========== -->
+            <div class="filters" id="filtersSidebar">
+                <h2>Refine Products</h2>
+
+                <!-- Categories Filter Section -->
+                <div class="filter-section">
+                    <h3>Categories</h3>
+                    <div class="filter-options">
+                        <!-- Streetwear Category -->
+                        <div class="category-header collapsed">Streetwear</div>
+                        <div class="category-content expanded">
+                            <div class="filter-option">
+                                <input type="checkbox" id="sneakers" data-category="streetwear" data-subcategory="sneakers">
+                                <label for="sneakers">Sneakers</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="hoodies" data-category="streetwear" data-subcategory="hoodies">
+                                <label for="hoodies">Hoodies</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="graphic-tees" data-category="streetwear" data-subcategory="graphic-tees">
+                                <label for="graphic-tees">Graphic Tees</label>
+                            </div>
+                        </div>
+
+                        <!-- Vintage Category -->
+                        <div class="category-header collapsed">Vintage</div>
+                        <div class="category-content expanded">
+                            <div class="filter-option">
+                                <input type="checkbox" id="denim" data-category="vintage" data-subcategory="denim">
+                                <label for="denim">Denim</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="jackets" data-category="vintage" data-subcategory="jackets">
+                                <label for="jackets">Jackets</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="band-tees" data-category="vintage" data-subcategory="band-tees">
+                                <label for="band-tees">Band Tees</label>
+                            </div>
+                        </div>
+
+                        <!-- Accessories Category -->
+                        <div class="category-header collapsed">Accessories</div>
+                        <div class="category-content expanded">
+                            <div class="filter-option">
+                                <input type="checkbox" id="watches" data-category="accessories" data-subcategory="watches">
+                                <label for="watches">Watches</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="jewelry" data-category="accessories" data-subcategory="jewelry">
+                                <label for="jewelry">Jewelry</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="hats" data-category="accessories" data-subcategory="hats">
+                                <label for="hats">Hats</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="bags" data-category="accessories" data-subcategory="bags">
+                                <label for="bags">Bags</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Availability Filter Section -->
+                <div class="filter-section">
+                    <h3>Availability</h3>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <input type="checkbox" id="in-stock" data-filter="in-stock">
+                            <label for="in-stock">In Stock Only</label>
+                        </div>
+                        <div class="location-badges">
+                            <div class="location-badge active" data-location="all">All Locations</div>
+                            <div class="location-badge" data-location="cpt">Cape Town</div>
+                            <div class="location-badge" data-location="dbn">Durban</div>
+                            <div class="location-badge" data-location="jhb">Johannesburg</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price Range Filter Section -->
+                <div class="filter-section">
+                    <h3>Price Range</h3>
+                    <div class="price-range">
+                        <input type="number" placeholder="Min" value="0" min="0" aria-label="Minimum price" id="price-min">
+                        <input type="number" placeholder="Max" value="5000" min="0" aria-label="Maximum price" id="price-max">
+                    </div>
+                </div>
+
+                <!-- Condition Filter Section -->
+                <div class="filter-section">
+                    <h3>Condition</h3>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <input type="checkbox" id="new" data-condition="new">
+                            <label for="new">New with Tags</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="excellent" data-condition="excellent">
+                            <label for="excellent">Excellent Used</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="good" data-condition="good">
+                            <label for="good">Good Used</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Apply Filters Button -->
+                <button class="add-to-cart" style="margin-top: 20px; background: var(--oasis-teal);" id="apply-filters">
+                    <i class="fas fa-filter"></i> Apply Filters
+                </button>
+
+                <!-- Clear Filters Button -->
+                <button class="add-to-cart" style="margin-top: 10px; background: var(--charcoal-gray);" id="clear-filters">
+                    <i class="fas fa-times"></i> Clear Filters
+                </button>
+            </div>
+
+            <!-- ========== PRODUCTS GRID SECTION ========== -->
+            <div class="main-content">
+                <div class="results-header">
+                    <div>
+                        <h1>Premium Thrift Collection</h1>
+                        <span id="results-count">Showing 6 of 6 products</span>
+                    </div>
+                    <div class="sort-options">
+                        <span>Sort by:</span>
+                        <select aria-label="Sort products" id="sort-select">
+                            <option value="featured">Featured</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="newest">Newest Arrivals</option>
+                            <option value="popular">Most Popular</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Loading spinner -->
+                <div class="loading-spinner" id="loadingSpinner"></div>
+
+                <!-- Products Grid with fade-in animation -->
+                <div class="products-grid" id="productsGrid">
+                    <!-- Product 1 -->
+                    <div class="product-card" 
+                         data-id="1" 
+                         data-title="Vintage Air Jordan 1 Retro High OG" 
+                         data-brand="Nike" 
+                         data-price="3200" 
+                         data-original-price="4400" 
+                         data-category="streetwear" 
+                         data-subcategory="sneakers" 
+                         data-location="cpt jhb" 
+                         data-stock="true" 
+                         data-condition="excellent" 
+                         data-rating="4" 
+                         data-rating-count="52">
+                        <div class="product-badge sale-badge">27% OFF</div>
+                        <div class="product-badge sponsored-badge">Limited</div>
+                        <a href="/cart/productView.html">
+                            <div class="product-image">
+                                <img src="https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" alt="Vintage Sneakers" loading="lazy">
+                            </div>
+                        </a>
+                        <div class="product-info">
+                            <div class="product-brand">Nike</div>
+                            <h3 class="product-title">Vintage Air Jordan 1 Retro High OG</h3>
+                            <div class="price-container">
+                                <div class="current-price">R 3,200</div>
+                                <div class="original-price">R 4,400</div>
+                            </div>
+                            <div class="stock-info">
+                                <i class="fas fa-check-circle"></i> In stock
+                                <div class="locations">CPT JHB</div>
+                            </div>
+                            <div class="rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <div class="rating-count">(52)</div>
+                            </div>
+                            <button class="add-to-cart" aria-label="Add to cart">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 2 -->
+                    <div class="product-card" 
+                         data-id="2" 
+                         data-title="Vintage 90s Denim Trucker Jacket" 
+                         data-brand="Levi's" 
+                         data-price="1250" 
+                         data-original-price="1800" 
+                         data-category="vintage" 
+                         data-subcategory="jackets" 
+                         data-location="cpt dbn jhb" 
+                         data-stock="true" 
+                         data-condition="good" 
+                         data-rating="4.5" 
+                         data-rating-count="26">
+                        <div class="product-badge sponsored-badge">New</div>
+                        <a href="/cart/productView.html">
+                            <div class="product-image">
+                                <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" alt="Denim Jacket" loading="lazy">
+                            </div>
+                        </a>
+                        <div class="product-info">
+                            <div class="product-brand">Levi's</div>
+                            <h3 class="product-title">Vintage 90s Denim Trucker Jacket</h3>
+                            <div class="price-container">
+                                <div class="current-price">R 1,250</div>
+                                <div class="original-price">R 1,800</div>
+                            </div>
+                            <div class="stock-info">
+                                <i class="fas fa-check-circle"></i> In stock
+                                <div class="locations">CPT DBN JHB</div>
+                            </div>
+                            <div class="rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <div class="rating-count">(26)</div>
+                            </div>
+                            <button class="add-to-cart" aria-label="Add to cart">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 3 -->
+                    <div class="product-card" 
+                         data-id="3" 
+                         data-title="Vintage Datejust 36mm Two-Tone" 
+                         data-brand="Rolex" 
+                         data-price="85000" 
+                         data-category="accessories" 
+                         data-subcategory="watches" 
+                         data-location="jhb" 
+                         data-stock="true" 
+                         data-condition="excellent" 
+                         data-rating="5" 
+                         data-rating-count="12">
+                        <a href="/cart/productView.html">
+                            <div class="product-image">
+                                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" alt="Designer Watch" loading="lazy">
+                            </div>
+                        </a>
+                        <div class="product-info">
+                            <div class="product-brand">Rolex</div>
+                            <h3 class="product-title">Vintage Datejust 36mm Two-Tone</h3>
+                            <div class="price-container">
+                                <div class="current-price">R 85,000</div>
+                            </div>
+                            <div class="stock-info">
+                                <i class="fas fa-check-circle"></i> In stock
+                                <div class="locations">JHB</div>
+                            </div>
+                            <div class="rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="rating-count">(12)</div>
+                            </div>
+                            <button class="add-to-cart" aria-label="Add to cart">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 4 -->
+                    <div class="product-card" 
+                         data-id="4" 
+                         data-title="Vintage Aviator Sunglasses" 
+                         data-brand="Ray-Ban" 
+                         data-price="1499" 
+                         data-original-price="1760" 
+                         data-category="accessories" 
+                         data-subcategory="watches" 
+                         data-location="cpt jhb" 
+                         data-stock="true" 
+                         data-condition="new" 
+                         data-rating="5" 
+                         data-rating-count="40">
+                        <div class="product-badge sale-badge">15% OFF</div>
+                        <a href="/cart/productView.html">
+                            <div class="product-image">
+                                <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" alt="Vintage Sunglasses" loading="lazy">
+                            </div>
+                        </a>
+                        <div class="product-info">
+                            <div class="product-brand">Ray-Ban</div>
+                            <h3 class="product-title">Vintage Aviator Sunglasses</h3>
+                            <div class="price-container">
+                                <div class="current-price">R 1,499</div>
+                                <div class="original-price">R 1,760</div>
+                            </div>
+                            <div class="stock-info">
+                                <i class="fas fa-check-circle"></i> In stock
+                                <div class="locations">CPT JHB</div>
+                            </div>
+                            <div class="rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="rating-count">(40)</div>
+                            </div>
+                            <button class="add-to-cart" aria-label="Add to cart">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 5 -->
+                    <div class="product-card" 
+                         data-id="5" 
+                         data-title="Vintage 1991 Nevermind Tour T-Shirt" 
+                         data-brand="Nirvana" 
+                         data-price="2800" 
+                         data-category="vintage" 
+                         data-subcategory="band-tees" 
+                         data-location="cpt" 
+                         data-stock="true" 
+                         data-condition="excellent" 
+                         data-rating="4" 
+                         data-rating-count="18">
+                        <div class="product-badge sponsored-badge">Rare</div>
+                        <a href="/cart/productView.html">
+                            <div class="product-image">
+                                <img src="https://images.unsplash.com/photo-1604176354204-9268737828e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" alt="Vintage T-shirt" loading="lazy">
+                            </div>
+                        </a>
+                        <div class="product-info">
+                            <div class="product-brand">Nirvana</div>
+                            <h3 class="product-title">Vintage 1991 Nevermind Tour T-Shirt</h3>
+                            <div class="price-container">
+                                <div class="current-price">R 2,800</div>
+                            </div>
+                            <div class="stock-info">
+                                <i class="fas fa-check-circle"></i> In stock
+                                <div class="locations">CPT</div>
+                            </div>
+                            <div class="rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <div class="rating-count">(18)</div>
+                            </div>
+                            <button class="add-to-cart" aria-label="Add to cart">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 6 -->
+                    <div class="product-card" 
+                         data-id="6" 
+                         data-title="Vintage GG Supreme Shoulder Bag" 
+                         data-brand="Gucci" 
+                         data-price="12500" 
+                         data-category="accessories" 
+                         data-subcategory="bags" 
+                         data-location="jhb" 
+                         data-stock="true" 
+                         data-condition="good" 
+                         data-rating="4.5" 
+                         data-rating-count="8">
+                        <a href="/cart/productView.html">
+                            <div class="product-image">
+                                <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" alt="Designer Handbag" loading="lazy">
+                            </div>
+                        </a>
+                        <div class="product-info">
+                            <div class="product-brand">Gucci</div>
+                            <h3 class="product-title">Vintage GG Supreme Shoulder Bag</h3>
+                            <div class="price-container">
+                                <div class="current-price">R 12,500</div>
+                            </div>
+                            <div class="stock-info">
+                                <i class="fas fa-check-circle"></i> In stock
+                                <div class="locations">JHB</div>
+                            </div>
+                            <div class="rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <div class="rating-count">(8)</div>
+                            </div>
+                            <button class="add-to-cart" aria-label="Add to cart">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== FOOTER SECTION ========== -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <!-- About Section -->
+                <div class="footer-section">
+                    <h3>Bro's Thrifting</h3>
+                    <p>Your one-stop destination for all things vintage and secondhand fashion. We deliver style straight to your door!</p>
+                    <div class="social-icons">
+                        <strong>Follow us</strong>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+
+                <!-- Account Links -->
+                <div class="footer-section">
+                    <h3>Account</h3>
+                    <ul class="footer-links">
+                        <li><a href="/auth/Login.html">My Account</a></li>
+                        <li><a href="#">Track Order</a></li>
+                        <li><a href="#">Personal Information</a></li>
+                        <li><a href="#">Invoices</a></li>
+                    </ul>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Shop All</a></li>
+                        <li><a href="#">New Arrivals</a></li>
+                        <li><a href="#">Best Sellers</a></li>
+                        <li><a href="#">Special Offers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Company Links -->
+                <div class="footer-section">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <!-- Customer Service Links -->
+                <div class="footer-section">
+                    <h3>Customer Service</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Shipping Policy</a></li>
+                        <li><a href="#">Returns & Refunds</a></li>
+                        <li><a href="#">Track Order</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter Subscription -->
+                <div class="footer-section">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to get special offers, new arrivals, and thrifting tips.</p>
+                    <div class="search-bar" style="margin-top: 15px;">
+                        <input type="text" placeholder="Your email address" aria-label="Email for newsletter">
+                    </div>
+                    <button class="subscribe-button" style="margin-top: 10px;" aria-label="Subscribe to newsletter">
+                        Subscribe
+                    </button>
+                </div>
+            </div>
+
+            <!-- Copyright Notice -->
+            <div class="copyright">
+                <p>&copy; 2025 Bro's Thrifting. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--cool-sky-blue);"></i></p>
+            </div>
+        </div>
+    </footer>
+
+ <!-- ========== JAVASCRIPT ========== -->
+<script>
+    // Document ready function to ensure DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Store product data
+        const products = Array.from(document.querySelectorAll('.product-card')).map(card => {
+            return {
+                element: card,
+                id: card.getAttribute('data-id'),
+                title: card.getAttribute('data-title').toLowerCase(),
+                brand: card.getAttribute('data-brand').toLowerCase(),
+                price: parseFloat(card.getAttribute('data-price')),
+                originalPrice: parseFloat(card.getAttribute('data-original-price')) || null,
+                category: card.getAttribute('data-category'),
+                subcategory: card.getAttribute('data-subcategory'),
+                locations: card.getAttribute('data-location').toLowerCase().split(' '),
+                inStock: card.getAttribute('data-stock') === 'true',
+                condition: card.getAttribute('data-condition'),
+                rating: parseFloat(card.getAttribute('data-rating')),
+                ratingCount: parseInt(card.getAttribute('data-rating-count'))
+            };
+        });
+
+        // Current filter state - all filters initially empty/unchecked
+        let filterState = {
+            searchQuery: '',
+            categories: {
+                streetwear: [],
+                vintage: [],
+                accessories: []
+            },
+            inStockOnly: false,
+            location: 'all',
+            priceRange: {
+                min: 0,
+                max: 5000
+            },
+            conditions: []
+        };
+
+        // Current sort method
+        let currentSortMethod = 'featured';
+
+        // ========== FILTER FUNCTIONS ==========
+        function filterProducts() {
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            loadingSpinner.style.display = 'block';
+            
+            // Simulate loading delay for better UX
+            setTimeout(() => {
+                let visibleCount = 0;
+                
+                products.forEach(product => {
+                    let matches = true;
+                    
+                    // Search filter
+                    if (filterState.searchQuery) {
+                        const searchTerm = filterState.searchQuery.toLowerCase();
+                        matches = matches && (
+                            product.title.includes(searchTerm) || 
+                            product.brand.includes(searchTerm)
+                        );
+                    }
+                    
+                    // Category filter
+                    const hasCategoryMatch = Object.entries(filterState.categories).some(([category, subcategories]) => {
+                        return subcategories.length > 0 && 
+                               product.category === category && 
+                               subcategories.includes(product.subcategory);
+                    });
+                    
+                    // Only apply category filter if at least one category is selected
+                    matches = matches && (Object.values(filterState.categories).flat().length === 0 || hasCategoryMatch);
+                    
+                    // Stock filter
+                    if (filterState.inStockOnly) {
+                        matches = matches && product.inStock;
+                    }
+                    
+                    // Location filter
+                    if (filterState.location !== 'all') {
+                        matches = matches && product.locations.includes(filterState.location);
+                    }
+                    
+                    // Price range filter
+                    matches = matches && (
+                        product.price >= filterState.priceRange.min && 
+                        product.price <= filterState.priceRange.max
+                    );
+                    
+                    // Condition filter - only apply if at least one condition is selected
+                    if (filterState.conditions.length > 0) {
+                        matches = matches && filterState.conditions.includes(product.condition);
+                    }
+                    
+                    // Apply visibility
+                    if (matches) {
+                        product.element.classList.remove('filtered-out');
+                        visibleCount++;
+                    } else {
+                        product.element.classList.add('filtered-out');
+                    }
+                });
+                
+                // Update results count
+                document.getElementById('results-count').textContent = `Showing ${visibleCount} of ${products.length} products`;
+                
+                // Sort products
+                sortProducts();
+                
+                loadingSpinner.style.display = 'none';
+            }, 300); // Short delay for perceived performance
+        }
+
+        // ========== SORT FUNCTIONS ==========
+        function sortProducts() {
+            const productsGrid = document.getElementById('productsGrid');
+            const productElements = Array.from(productsGrid.querySelectorAll('.product-card:not(.filtered-out)'));
+            
+            // Sort based on current method
+            productElements.sort((a, b) => {
+                const aData = products.find(p => p.element === a);
+                const bData = products.find(p => p.element === b);
+                
+                switch (currentSortMethod) {
+                    case 'price-low':
+                        return aData.price - bData.price;
+                    case 'price-high':
+                        return bData.price - aData.price;
+                    case 'newest':
+                        // Assuming newer products have higher IDs (for demo)
+                        return bData.id - aData.id;
+                    case 'popular':
+                        return bData.ratingCount - aData.ratingCount;
+                    case 'featured':
+                    default:
+                        // Default sorting (original order)
+                        return parseInt(a.getAttribute('data-id')) - parseInt(b.getAttribute('data-id'));
+                }
+            });
+            
+            // Re-append sorted products
+            productElements.forEach(el => productsGrid.appendChild(el));
+        }
+
+        // ========== EVENT LISTENERS ==========
+        // Search input
+        document.getElementById('search-input').addEventListener('input', function(e) {
+            filterState.searchQuery = e.target.value;
+            filterProducts();
+        });
+
+        // Category checkboxes
+        document.querySelectorAll('.filter-option input[type="checkbox"][data-category]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const category = this.getAttribute('data-category');
+                const subcategory = this.getAttribute('data-subcategory');
+                
+                if (this.checked) {
+                    if (!filterState.categories[category]) {
+                        filterState.categories[category] = [];
+                    }
+                    filterState.categories[category].push(subcategory);
+                } else {
+                    filterState.categories[category] = filterState.categories[category].filter(
+                        sc => sc !== subcategory
+                    );
+                }
+                
+                filterProducts();
+            });
+        });
+
+        // Stock checkbox
+        document.getElementById('in-stock').addEventListener('change', function() {
+            filterState.inStockOnly = this.checked;
+            filterProducts();
+        });
+
+        // Location badges
+        document.querySelectorAll('.location-badge').forEach(badge => {
+            badge.addEventListener('click', function() {
+                // Don't do anything if already active
+                if (this.classList.contains('active')) return;
+
+                // Remove active class from all badges
+                document.querySelectorAll('.location-badge').forEach(b => {
+                    b.classList.remove('active');
+                });
+                // Add active class to clicked badge
+                this.classList.add('active');
+                
+                // Update filter state
+                filterState.location = this.getAttribute('data-location');
+                filterProducts();
+            });
+        });
+
+        // Price range inputs
+        document.getElementById('price-min').addEventListener('change', function() {
+            filterState.priceRange.min = parseFloat(this.value) || 0;
+            filterProducts();
+        });
+
+        document.getElementById('price-max').addEventListener('change', function() {
+            filterState.priceRange.max = parseFloat(this.value) || Infinity;
+            filterProducts();
+        });
+
+        // Condition checkboxes
+        document.querySelectorAll('.filter-option input[type="checkbox"][data-condition]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const condition = this.getAttribute('data-condition');
+                
+                if (this.checked) {
+                    filterState.conditions.push(condition);
+                } else {
+                    filterState.conditions = filterState.conditions.filter(c => c !== condition);
+                }
+                
+                filterProducts();
+            });
+        });
+
+        // Apply filters button
+        document.getElementById('apply-filters').addEventListener('click', filterProducts);
+
+        // Clear filters button
+        document.getElementById('clear-filters').addEventListener('click', function() {
+            // Reset all checkboxes
+            document.querySelectorAll('.filter-option input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            // Reset location badge
+            document.querySelectorAll('.location-badge').forEach(badge => {
+                badge.classList.remove('active');
+            });
+            document.querySelector('.location-badge[data-location="all"]').classList.add('active');
+            
+            // Reset price range
+            document.getElementById('price-min').value = 0;
+            document.getElementById('price-max').value = 5000;
+            
+            // Reset search
+            document.getElementById('search-input').value = '';
+            
+            // Reset filter state
+            filterState = {
+                searchQuery: '',
+                categories: {
+                    streetwear: [],
+                    vintage: [],
+                    accessories: []
+                },
+                inStockOnly: false,
+                location: 'all',
+                priceRange: {
+                    min: 0,
+                    max: 5000
+                },
+                conditions: []
+            };
+            
+            // Reset sort
+            document.getElementById('sort-select').value = 'featured';
+            currentSortMethod = 'featured';
+            
+            // Apply reset filters
+            filterProducts();
+        });
+
+        // Sort select
+        document.getElementById('sort-select').addEventListener('change', function() {
+            currentSortMethod = this.value;
+            sortProducts();
+        });
+
+        // ========== TOGGLE CATEGORY SECTIONS ==========
+        document.querySelectorAll('.category-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.classList.toggle('collapsed');
+                const content = header.nextElementSibling;
+                content.classList.toggle('expanded');
+                
+                if (content.classList.contains('expanded')) {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                } else {
+                    content.style.maxHeight = '0';
+                }
+            });
+
+            // Initialize all categories as expanded
+            header.classList.add('collapsed');
+            const content = header.nextElementSibling;
+            content.classList.add('expanded');
+            content.style.maxHeight = content.scrollHeight + 'px';
+        });
+
+        // ========== MOBILE FILTER TOGGLE ==========
+        const filtersSidebar = document.getElementById('filtersSidebar');
+        const mobileFilterOverlay = document.getElementById('mobileFilterOverlay');
+        const menuToggle = document.createElement('button');
+        
+        menuToggle.innerHTML = '<i class="fas fa-filter"></i> Filters';
+        menuToggle.classList.add('menu-toggle');
+        menuToggle.style.display = 'none';
+        menuToggle.style.position = 'fixed';
+        menuToggle.style.bottom = '20px';
+        menuToggle.style.right = '20px';
+        menuToggle.style.zIndex = '1000';
+        menuToggle.style.background = 'var(--urban-green)';
+        menuToggle.style.color = 'white';
+        menuToggle.style.border = 'none';
+        menuToggle.style.borderRadius = 'var(--border-radius)';
+        menuToggle.style.padding = '12px 20px';
+        menuToggle.style.fontSize = '1rem';
+        menuToggle.style.cursor = 'pointer';
+        menuToggle.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+        menuToggle.style.display = 'flex';
+        menuToggle.style.alignItems = 'center';
+        menuToggle.style.gap = '8px';
+        document.body.appendChild(menuToggle);
+
+        function checkScreenSize() {
+            if (window.innerWidth <= 992) {
+                menuToggle.style.display = 'flex';
+                filtersSidebar.style.position = 'fixed';
+            } else {
+                menuToggle.style.display = 'none';
+                filtersSidebar.style.position = 'sticky';
+                filtersSidebar.style.transform = 'translateX(0)';
+                filtersSidebar.style.opacity = '1';
+                mobileFilterOverlay.classList.remove('active');
+            }
+        }
+
+        // Initial check
+        checkScreenSize();
+
+        // Add resize event listener
+        window.addEventListener('resize', checkScreenSize);
+
+        // Toggle filters visibility when menu button is clicked
+        menuToggle.addEventListener('click', function() {
+            filtersSidebar.classList.toggle('active');
+            mobileFilterOverlay.classList.toggle('active');
+        });
+
+        // Close filters when clicking overlay
+        mobileFilterOverlay.addEventListener('click', function() {
+            filtersSidebar.classList.remove('active');
+            this.classList.remove('active');
+        });
+
+        // ========== LAZY LOADING IMAGES ========== 
+        const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { // <-- FIXED
+                        const img = entry.target;
+                        img.src = img.dataset.src || img.src;
+                        observer.unobserve(img);
+                    }
+                });
+            });
+            lazyImages.forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+
+        // ========== CATEGORY TOGGLE FIX ==========
+        document.querySelectorAll('.category-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.classList.toggle('collapsed');
+                const content = header.nextElementSibling;
+                content.classList.toggle('expanded');
+                if (content.classList.contains('expanded')) {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                } else {
+                    content.style.maxHeight = '0';
+                }
+            });
+            // Set initial state: expanded by default
+            header.classList.remove('collapsed');
+            const content = header.nextElementSibling;
+            content.classList.add('expanded');
+            content.style.maxHeight = content.scrollHeight + 'px';
+        });
+
+        // ========== PRICE RANGE DEFAULT FIX ==========
+        // Set max price input to 100000 on load
+        document.getElementById('price-max').value = 100000;
+        filterState.priceRange.max = 100000;
+
+        // ========== CART MANAGEMENT ==========
+        function getCart() {
+            const cart = localStorage.getItem('broCart');
+            return cart ? JSON.parse(cart) : [];
+        }
+
+        function saveCart(cart) {
+            localStorage.setItem('broCart', JSON.stringify(cart));
+            updateCartIndicator();
+        }
+
+        function addToCart(productId, quantity = 1) {
+            const cart = getCart();
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    const img = product.element.querySelector('.product-image img');
+                    cart.push({
+                        id: product.id,
+                        title: product.title,
+                        brand: product.brand,
+                        price: product.price,
+                        image: img ? img.src : '',
+                        quantity: quantity
+                    });
+                }
+            }
+            
+            saveCart(cart);
+        }
+
+        function updateCartIndicator() {
+            const cart = getCart();
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            // Update indicator on all pages
+            const indicators = document.querySelectorAll('.cart-indicator');
+            indicators.forEach(indicator => {
+                if (totalItems > 0) {
+                    indicator.textContent = totalItems;
+                    indicator.style.display = 'flex';
+                } else {
+                    indicator.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize cart indicator when page loads
+        updateCartIndicator();
+        
+        // Add to cart button event listeners
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            if (button.id !== 'apply-filters' && button.id !== 'clear-filters') {
+                button.addEventListener('click', function() {
+                    const productId = this.closest('.product-card').getAttribute('data-id');
+                    addToCart(productId);
+                    
+                    // Animation feedback
+                    const originalText = this.innerHTML;
+                    const originalBg = this.style.background;
+                    const originalTransform = this.style.transform;
+
+                    this.innerHTML = '<i class="fas fa-check"></i> Added!';
+                    this.style.background = 'var(--oasis-teal)';
+                    this.style.transform = 'scale(0.95)';
+
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.style.background = originalBg;
+                        this.style.transform = originalTransform;
+                    }, 2000);
+                });
+            }
+        });
+        
+        // Update cart link to point to cart.html
+        document.querySelectorAll('a[href*="/cart"]').forEach(link => {
+            link.href = '/cart/cart.html';
+        });
+
+        // ========== INITIALIZE ==========
+        filterProducts(); // Apply initial filters (will show all products since no filters are checked)
+    });
+</script>
+</body>
+</html>
